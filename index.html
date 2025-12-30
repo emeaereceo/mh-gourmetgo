@@ -68,11 +68,16 @@
           >
             <i class="bi bi-search text-secondary me-2"></i>
             <input
+              id="input-ingrediente"
               type="text"
               class="form-control border-0 shadow-none"
               placeholder="Busca por ingrediente, ejemplo: pollo..."
             />
-            <button class="btn btn-success rounded-pill px-4 ms-2">
+            <button
+              class="btn btn-success rounded-pill px-4 ms-2"
+              type="button"
+              id="btn-buscar"
+            >
               Buscar
             </button>
           </form>
@@ -87,7 +92,7 @@
         Recetas destacadas
       </h2>
 
-      <div class="row g-4">
+      <!-- <div class="row g-4">
         <div class="col-12 col-md-6 col-lg-4">
           <div class="recipe-card card h-100 shadow-sm border-0">
             <img
@@ -147,9 +152,9 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <!-- <div id="resultado" class="row g-4"></div> -->
+      <div id="resultado" class="row g-4"></div>
 
       <div class="modal fade" id="modalReceta" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -165,16 +170,7 @@
 
             <div class="modal-body text-center">
               <img id="modalImagen" class="img-fluid rounded mb-3" alt="" />
-              <p class="text-muted">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sequi
-                harum laudantium nam vero nihil? Sed libero tempore molestias
-                debitis explicabo.
-              </p>
-              <p class="text-muted">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sequi
-                harum laudantium nam vero nihil? Sed libero tempore molestias
-                debitis explicabo.
-              </p>
+              <div id="modalDetalle"></div>
             </div>
           </div>
         </div>
