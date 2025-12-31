@@ -1,10 +1,9 @@
-// * 1. Crear funcion para la busqueda
-//   TODO : Revisar api para conocer los parametros que se le pueden pasar
-// * 2. Vincular funcion al boton del formulario, al escuchar el evento
-// * 3. Funcion retorna una lista de objetos, se recorre la lista para crear cards con la info
+// TODO : Revisar api para conocer los parametros que se le pueden pasar
+// TODO : Busqueda por distintas apis
+// TODO : Crear fragment?
 
 // Busqueda de receta por ingrediente
-async function buscarRecetas(ingrediente) {
+const buscarRecetas = async (ingrediente) => {
   const url = `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingrediente}`;
 
   try {
@@ -15,10 +14,10 @@ async function buscarRecetas(ingrediente) {
   } catch (error) {
     console.error("Error al buscar la receta:", error);
   }
-}
+};
 
 // Detalle de la receta por ID
-async function detalleReceta(id) {
+const detalleReceta = async (id) => {
   const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`;
   try {
     const respuesta = await fetch(url);
@@ -28,7 +27,7 @@ async function detalleReceta(id) {
   } catch (error) {
     console.error("Error al buscar la receta:", error);
   }
-}
+};
 
 // buscarRecetas("beef");
 const searchBtn = document.getElementById("btn-buscar");
@@ -50,20 +49,19 @@ searchBtn.addEventListener("click", async () => {
     contenedor.innerHTML = `<p>No se encontraron recetas con ingrediente ${ingrediente}.</p>`;
     return;
   }
-
   contenedor.innerHTML = recetas
     .map(
-      (meal) => `
+      ({ strMealThumb, strMeal, idMeal }) => `
         <div class="col-12 col-md-6 col-lg-4">
          <div class="recipe-card card h-100 shadow-sm border-0">
             <img
-              src="${meal.strMealThumb}"
+              src="${strMealThumb}"
               class="card-img-top"
-              alt="${meal.strMeal}"
+              alt="${strMeal}"
             />
             <div class="card-body">
-              <h5 class="card-title fw-semibold">${meal.strMeal}</h5>
-              <a href="#" class="btn btn-outline-success rounded-pill ver-receta" data-id=${meal.idMeal}
+              <h5 class="card-title fw-semibold">${strMeal}</h5>
+              <a href="#" class="btn btn-outline-success rounded-pill ver-receta" data-id=${idMeal}
                 >Ver receta</a
               >
             </div>
@@ -74,18 +72,19 @@ searchBtn.addEventListener("click", async () => {
     .join("");
 });
 
-document.addEventListener("click", async (evento) => {
-  if (!evento.target.classList.contains("ver-receta")) return;
+document.addEventListener("click", async (e) => {
+  if (!e.target.classList.contains("ver-receta")) return;
+  e.preventDefault();
 
-  const id = evento.target.dataset.id;
+  const id = e.target.dataset.id;
 
-  const receta = await detalleReceta(id);
+  const { strMeal, strMealThumb, strInstructions } = await detalleReceta(id);
 
   // Pasarlos al modal
-  document.getElementById("modalTitulo").textContent = receta.strMeal;
-  document.getElementById("modalImagen").src = receta.strMealThumb;
-  document.getElementById("modalImagen").alt = receta.strMeal;
-  document.getElementById("modalDetalle").textContent = receta.strInstructions;
+  document.getElementById("modalTitulo").textContent = strMeal;
+  document.getElementById("modalImagen").src = strMealThumb;
+  document.getElementById("modalImagen").alt = strMeal;
+  document.getElementById("modalDetalle").textContent = strInstructions;
 
   // Mostrar modal
   const modal = new bootstrap.Modal(document.getElementById("modalReceta"));
