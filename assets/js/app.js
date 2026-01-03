@@ -1,7 +1,3 @@
-// TODO : Revisar api para conocer los parametros que se le pueden pasar
-// TODO : Busqueda por distintas apis
-// TODO : Crear fragment para la creacion de cards?
-
 // Busqueda de receta por ingrediente
 const buscarRecetas = async (ingrediente) => {
   if (!ingrediente) return null;
@@ -30,10 +26,7 @@ const detalleReceta = async (id) => {
   }
 };
 
-const searchBtn = document.getElementById("btn-buscar");
-
-searchBtn.addEventListener("click", async () => {
-  const input = document.getElementById("input-ingrediente");
+const renderizarBusqueda = async () => {
   const ingrediente = input.value.trim();
   const errorMessage = document.getElementById("error-message");
   const contenedor = document.getElementById("resultado");
@@ -59,7 +52,13 @@ searchBtn.addEventListener("click", async () => {
   const recetas = await buscarRecetas(ingrediente);
 
   if (!recetas) {
-    contenedor.innerHTML = `<p>Lo sentimos, no se encontraron recetas. Intenta con otro ingrediente.`;
+    contenedor.innerHTML = `
+     <div class="col-12 d-flex justify-content-center">
+      <div class="alert alert-warning text-center shadow-sm w-100" role="alert" style="max-width: 500px;">
+        <h5 class="mb-2">😕 No se encontraron recetas.</h5>
+        <p class="mb-0">Intenta con otro ingrediente.</p>
+      </div>
+    </div>`;
     return;
   }
 
@@ -84,6 +83,20 @@ searchBtn.addEventListener("click", async () => {
       `
     )
     .join("");
+};
+
+const input = document.getElementById("input-ingrediente");
+input.addEventListener("keydown", async (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    renderizarBusqueda();
+  }
+});
+
+const searchBtn = document.getElementById("btn-buscar");
+searchBtn.addEventListener("click", async (e) => {
+  e.preventDefault();
+  renderizarBusqueda();
 });
 
 document.addEventListener("click", async (e) => {
