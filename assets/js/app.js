@@ -1,9 +1,10 @@
 // TODO : Revisar api para conocer los parametros que se le pueden pasar
 // TODO : Busqueda por distintas apis
-// TODO : Crear fragment?
+// TODO : Crear fragment para la creacion de cards?
 
 // Busqueda de receta por ingrediente
 const buscarRecetas = async (ingrediente) => {
+  if (!ingrediente) return null;
   const url = `https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingrediente}`;
 
   try {
@@ -29,12 +30,24 @@ const detalleReceta = async (id) => {
   }
 };
 
-// buscarRecetas("beef");
 const searchBtn = document.getElementById("btn-buscar");
 
 searchBtn.addEventListener("click", async () => {
-  const ingrediente = document.getElementById("input-ingrediente").value.trim();
+  const input = document.getElementById("input-ingrediente");
+  const ingrediente = input.value.trim();
+  const errorMessage = document.getElementById("error-message");
   const contenedor = document.getElementById("resultado");
+
+  // Validacion input
+  if (ingrediente === "") {
+    contenedor.innerHTML = "";
+    errorMessage.classList.remove("d-none");
+    input.focus();
+
+    return;
+  }
+
+  errorMessage.classList.add("d-none");
 
   contenedor.innerHTML = `
   <div class="w-100 d-flex justify-content-center">
@@ -46,9 +59,10 @@ searchBtn.addEventListener("click", async () => {
   const recetas = await buscarRecetas(ingrediente);
 
   if (!recetas) {
-    contenedor.innerHTML = `<p>No se encontraron recetas con ingrediente ${ingrediente}.</p>`;
+    contenedor.innerHTML = `<p>Lo sentimos, no se encontraron recetas. Intenta con otro ingrediente.`;
     return;
   }
+
   contenedor.innerHTML = recetas
     .map(
       ({ strMealThumb, strMeal, idMeal }) => `
